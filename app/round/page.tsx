@@ -1,13 +1,11 @@
 "use client"
 
 import { useState } from "react"
-
 import { supabase } from "@/lib/supabase"
 
 export default function RoundPage() {
   const [currentHole, setCurrentHole] = useState(1)
 
-  // Each hole has its own stored data
   const [holes, setHoles] = useState(
     Array.from({ length: 18 }, (_, i) => ({
       hole: i + 1,
@@ -18,10 +16,8 @@ export default function RoundPage() {
     }))
   )
 
-  // Get current hole object
   const current = holes[currentHole - 1]
 
-  // Update a field for the current hole
   function updateHole(field: string, value: any) {
     const updated = [...holes]
 
@@ -31,6 +27,32 @@ export default function RoundPage() {
     }
 
     setHoles(updated)
+  }
+
+  async function saveHole() {
+    const hole = holes[currentHole - 1]
+
+    console.log("Saving hole:", hole)
+
+    const { data, error } = await supabase
+      .from("hole_scores")
+      .insert([
+        {
+          round_id: "test-round-1",
+          hole_number: currentHole,
+          score: hole.score,
+          fairway_hit: hole.fairway === "Yes",
+          gir: hole.gir === "Yes",
+          putts: hole.putts
+        }
+      ])
+      .select()
+
+    if (error) {
+        console.log("FULL SUPABASE ERROR:", JSON.stringify(error, null, 2))
+    } else {
+      console.log("✅ Saved successfully:", data)
+    }
   }
 
   function nextHole() {
@@ -49,7 +71,6 @@ export default function RoundPage() {
     <main className="min-h-screen bg-black-100 flex flex-col items-center p-6">
       <div className="w-full max-w-md mt-10">
 
-        {/* Hole Title */}
         <h1 className="text-4xl font-bold mb-8 text-center">
           Hole {currentHole}
         </h1>
@@ -58,10 +79,7 @@ export default function RoundPage() {
 
           {/* Score */}
           <div>
-            <label className="block mb-2 font-semibold">
-              Score
-            </label>
-
+            <label className="block mb-2 font-semibold">Score</label>
             <input
               type="number"
               value={current.score}
@@ -74,10 +92,7 @@ export default function RoundPage() {
 
           {/* Fairway */}
           <div>
-            <label className="block mb-2 font-semibold">
-              Fairway Hit
-            </label>
-
+            <label className="block mb-2 font-semibold">Fairway Hit</label>
             <select
               value={current.fairway}
               onChange={(e) =>
@@ -95,7 +110,6 @@ export default function RoundPage() {
             <label className="block mb-2 font-semibold">
               Green in Regulation
             </label>
-
             <select
               value={current.gir}
               onChange={(e) =>
@@ -110,10 +124,7 @@ export default function RoundPage() {
 
           {/* Putts */}
           <div>
-            <label className="block mb-2 font-semibold">
-              Putts
-            </label>
-
+            <label className="block mb-2 font-semibold">Putts</label>
             <input
               type="number"
               value={current.putts}
@@ -124,8 +135,9 @@ export default function RoundPage() {
             />
           </div>
 
-          {/* Navigation Buttons */}
+          {/* Navigation */}
           <div className="flex gap-4">
+
             <button
               onClick={prevHole}
               className="bg-gray-600 text-white py-3 rounded-xl font-bold w-full"
@@ -134,11 +146,15 @@ export default function RoundPage() {
             </button>
 
             <button
-              onClick={nextHole}
+              onClick={async () => {
+                await saveHole()
+                nextHole()
+              }}
               className="bg-green-900 text-white py-3 rounded-xl font-bold w-full"
             >
               Next
             </button>
+
           </div>
 
         </div>
