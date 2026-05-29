@@ -16,8 +16,10 @@ export default function StartRoundPage() {
   
               <select className="w-full p-3 rounded-xl text-black">
                 <option>Palouse Ridge</option>
-                <option>Augusta National</option>
-                <option>Pebble Beach</option>
+                <option>Colfax National</option>
+                <option>Saint John</option>
+                <option>Idaho</option>
+                <option>Sage Hills</option>
               </select>
             </div>
   
