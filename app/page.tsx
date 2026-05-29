@@ -7,7 +7,7 @@ export default function Home() {
       </h1>
 
       <p className="text-lg mb-10">
-        Track your rounds hole by hole
+        Not too much... but quite a bit!
       </p>
 
       <Link href="/start-round">

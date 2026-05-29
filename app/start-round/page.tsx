@@ -1,3 +1,4 @@
+import Link from "next/link"
 export default function StartRoundPage() {
     return (
       <main className="min-h-screen bg-green-900 text-white flex flex-col items-center p-6">
@@ -49,9 +50,11 @@ export default function StartRoundPage() {
             </div>
   
             {/* Begin Round Button */}
-            <button className="bg-white text-green-900 py-4 rounded-xl font-bold text-lg hover:bg-gray-200 transition">
-              Begin Round
-            </button>
+            <Link href="/round">
+  <button className="bg-white text-green-900 py-4 rounded-xl font-bold text-lg hover:bg-gray-200 transition w-full">
+    Begin Round
+  </button>
+</Link>
   
           </div>
         </div>
